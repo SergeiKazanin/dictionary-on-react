@@ -22,6 +22,19 @@ function SerchForm(props) {
   )
 }
 
+function Resalt() {
+  return (
+    <div className='results'>
+    <div className='res-info'>
+      <div className='res-eorld'>Res</div>
+      <div className='res-sound'>
+        <img src="./sound.png" alt='Play  sound' />
+      </div>
+    </div>
+  </div>
+  )
+}
+
 
 
 
@@ -37,17 +50,8 @@ function Body() {
       <div className='main'>
         <h1>Dictionary</h1>
         <SerchForm onChange = {handleCangeText} world = {world}/>
-
         <div className='error'>World not found</div>
-
-        <div className='results'>
-          <div className='res-info'>
-            <div className='res-eorld'>Res</div>
-            <div className='res-sound'>
-              <img src="./sound.png" alt='Play  sound' />
-            </div>
-          </div>
-        </div>
+        <Resalt />
 
         <div className='res-list'>
           list
