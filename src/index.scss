@@ -4,16 +4,17 @@
 body {
   margin: 0;
   font-family: 'Roboto', sans-serif;
-  background: rgb(170, 105, 250);
+
 }
 
 
 .app {
 
   .main {
+    background: rgb(190, 141, 251);
     margin-left: auto;
     margin-right: auto;
-    width: 500px;
+    width: 600px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -31,7 +32,7 @@ body {
       justify-content: center;
       align-items: center;
       gap: 10px;
-      border: 1px solid rgb(255, 171, 171);
+      /*border: 1px solid rgb(255, 171, 171);*/
       padding: 10px;
       border-radius: 5px;
 
@@ -47,7 +48,6 @@ body {
       width: 100%;
       display: flex;
       justify-content: center;
-
       flex-direction: column;
       gap: 20px;
 
@@ -61,15 +61,61 @@ body {
         border: 1px solid;
         padding: 10px;
         border-radius: 5px;
+
+        .res-world {
+          font-size: 2em;
+        }
       }
 
-      .res-world {
-        font-size: 2em;
+      .res-list {
+        .phras {
+          display: flex;
+          align-items: flex-start;
+          gap:20px;
+        }
+
+        li {
+          list-style-type: none;
+          margin: 0;
+        }
+
+        p {
+          margin-bottom: 5px;
+        }
+
+        ul {
+          margin: 0;
+          padding-left: 10px;
+          /* Отступ слева в браузере Firefox, Safari, Chrome */
+        }
       }
+
     }
 
     .error {
       color: rgb(253, 110, 2);
     }
   }
+}
+
+@media(max-width: 600px) {
+  .app {
+    .main {
+      width: auto;
+
+      .results {
+        .res-list {
+          .phras {
+            display: inline;
+ 
+            width: auto;
+          }
+        }
+      }
+
+    }
+
+
+  }
+
 }

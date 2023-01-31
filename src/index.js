@@ -23,9 +23,27 @@ function SerchForm(props) {
     </form>
   )
 }
+function ElBr(props) {
+  return (
+    <li>{props.el}</li>
+  )
+}
+const PrintArr = (props) => {
+  if (props.arr) {
+    return (
+      <div>
+        <p>{props.p}</p>
+        <ul>
+          {props.arr.map((el, i) => <ElBr key={i} el={el.text} />)}
+        </ul>
+      </div>
+    );
+  }
+}
 
 function Resalt(props) {
   if (props.world.length) {
+    const res = props.objWorld.lexicalEntries;
     return (
       <div className='results'>
         <div className='res-info'>
@@ -35,7 +53,20 @@ function Resalt(props) {
           </div>
         </div>
         <div className='res-list'>
-          list
+          {console.log(res)}
+          <div>
+            {res.lexicalCategory.text}
+          </div>
+          <div>
+            {res.entries[0].senses[0].definitions}
+          </div>
+          <PrintArr p={'Examples'} arr={res.entries[0].senses[0].examples} />
+
+          <div className='phras'>
+            <PrintArr p={'Synonyms'} arr={res.entries[0].senses[0].synonyms} />
+            <PrintArr p={'Phrases'} arr={res.phrases} />
+            <PrintArr p={'Phrasal verbs'} arr={res.phrasalVerbs} />
+          </div>
         </div>
       </div>
     )
@@ -48,8 +79,6 @@ function ErrorRes(props) {
   }
 }
 
-
-
 function Body() {
   const url = 'http://localhost:8080/https://od-api.oxforddictionaries.com/api/v2/entries/en-gb/';
   const appId = 'aaa8ae77';
@@ -58,8 +87,9 @@ function Body() {
   const [world, setWorld] = useState("");
   const [sechWorld, setSechWorld] = useState("");
   const [error, setError] = useState(false);
-  const [ObjWorld, setObjWorld] = useState({
+  const [objWorld, setObjWorld] = useState({
     sound: [],
+    lexicalEntries: {},
   })
 
   const handleCangeText = (e) => {
@@ -87,9 +117,9 @@ function Body() {
         const { results } = respRes;
         setObjWorld(ObjWorld => ({
           ...ObjWorld,
-          sound: results[0].lexicalEntries[0].entries[0].pronunciations
+          sound: results[0].lexicalEntries[0].entries[0].pronunciations,
+          lexicalEntries: results[0].lexicalEntries[0],
         }));
-        console.log(results[0])
       } else {
         setError(true);
         setSechWorld('');
@@ -100,9 +130,10 @@ function Body() {
   }
 
   const handleSound = () => {
-    if (ObjWorld.sound?.length) {
-      const sound = ObjWorld.sound[0].audioFile
+    if (objWorld.sound) {
+      const sound = objWorld.sound[0].audioFile
       new Audio(sound).play();
+
     }
   }
 
@@ -112,7 +143,7 @@ function Body() {
         <h1>Dictionary</h1>
         <SerchForm onChange={handleCangeText} onSabmit={handleSabmit} world={world} />
         <ErrorRes errorTrue={error} />
-        <Resalt world={sechWorld} onClick={handleSound} />
+        <Resalt world={sechWorld} objWorld={objWorld} onClick={handleSound} />
 
       </div>
     </div>
