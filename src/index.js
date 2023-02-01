@@ -53,7 +53,6 @@ function Resalt(props) {
           </div>
         </div>
         <div className='res-list'>
-          {console.log(res)}
           <div>
             {res.lexicalCategory.text}
           </div>
@@ -108,6 +107,7 @@ function Body() {
           'app_key': appKey
         },
         credentials: "include",
+    
       });
       const respRes = await resp.json();
 

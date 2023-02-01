@@ -20,7 +20,7 @@ body {
     align-items: center;
     flex-direction: column;
     gap: 20px;
-    border: 1px solid rgb(255, 171, 171);
+    border: 1px solid rgb(255, 255, 255);
     margin-top: 50px;
     padding: 10px;
     border-radius: 10px;
@@ -71,7 +71,7 @@ body {
         .phras {
           display: flex;
           align-items: flex-start;
-          gap:20px;
+          gap: 20px;
         }
 
         li {
@@ -107,7 +107,7 @@ body {
         .res-list {
           .phras {
             display: inline;
- 
+
             width: auto;
           }
         }
