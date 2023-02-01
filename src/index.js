@@ -79,9 +79,9 @@ function ErrorRes(props) {
 }
 
 function Body() {
-  const url = 'http://localhost:8080/https://od-api.oxforddictionaries.com/api/v2/entries/en-gb/';
-  const appId = 'aaa8ae77';
-  const appKey = '72decbb2a6dc1119afbe9368d28e9126';
+  const url = 'https://od-api.oxforddictionaries.com/api/v2/entries/en-gb/';
+  const appId = '';
+  const appKey = '';
 
   const [world, setWorld] = useState("");
   const [sechWorld, setSechWorld] = useState("");
