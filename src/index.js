@@ -4,6 +4,7 @@ import './index.scss';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import { ConstructionOutlined } from '@mui/icons-material';
 
 function SerchForm(props) {
   return (
@@ -29,12 +30,24 @@ function ElBr(props) {
   )
 }
 const PrintArr = (props) => {
-  if (props.arr) {
+  if (props.arr.length) {
     return (
       <div>
         <p>{props.p}</p>
         <ul>
-          {props.arr.map((el, i) => <ElBr key={i} el={el.text} />)}
+          {props.arr.map((el, i) => <ElBr key={i} el={el} />)}
+        </ul>
+      </div>
+    );
+  }
+}
+const PrintArrObj = (props) => {
+  if (props.arr.length) {
+    return (
+      <div>
+        <p>{props.p}</p>
+        <ul>
+          {props.arr.map((el, i) => <ElBr key={i} el={el.definition} />)}
         </ul>
       </div>
     );
@@ -44,6 +57,7 @@ const PrintArr = (props) => {
 function Resalt(props) {
   if (props.world.length) {
     const res = props.objWorld.lexicalEntries;
+    const meanings = props.objWorld.lexicalEntries.meanings[0];
     return (
       <div className='results'>
         <div className='res-info'>
@@ -54,18 +68,19 @@ function Resalt(props) {
         </div>
         <div className='res-list'>
           <div>
-            {res.lexicalCategory.text}
+            <p>{meanings.partOfSpeech.toLocaleUpperCase()}</p>
           </div>
           <div>
-            {res.entries[0].senses[0].definitions}
+            <p>{res.phonetic}</p>
           </div>
-          <PrintArr p={'Examples'} arr={res.entries[0].senses[0].examples} />
-
+          <div>
+            <a href={res.sourceUrls[0]} rel="noreferrer" target='_blank'>Wiktionary.org about "{props.world}"</a>
+          </div>
           <div className='phras'>
-            <PrintArr p={'Synonyms'} arr={res.entries[0].senses[0].synonyms} />
-            <PrintArr p={'Phrases'} arr={res.phrases} />
-            <PrintArr p={'Phrasal verbs'} arr={res.phrasalVerbs} />
+            <PrintArr p={'Antonyms'} arr={meanings.antonyms} />
+            <PrintArr p={'Synonymus'} arr={meanings.synonyms} />
           </div>
+          <PrintArrObj p={'Definitions'} arr={meanings.definitions} />
         </div>
       </div>
     )
@@ -79,9 +94,7 @@ function ErrorRes(props) {
 }
 
 function Body() {
-  const url = 'https://od-api.oxforddictionaries.com/api/v2/entries/en-gb/';
-  const appId = '';
-  const appKey = '';
+  const url = 'https://api.dictionaryapi.dev/api/v2/entries/en/';
 
   const [world, setWorld] = useState("");
   const [sechWorld, setSechWorld] = useState("");
@@ -101,24 +114,16 @@ function Body() {
     if (!world.trim()) return;
 
     try {
-      const resp = await fetch(`${url}${world}`, {
-        headers: {
-          'app_id': appId,
-          'app_key': appKey
-        },
-        credentials: "include",
-    
-      });
+      const resp = await fetch(`${url}${world}`);
       const respRes = await resp.json();
-
-      if (resp.ok && respRes.results.length) {
+      console.log(respRes)
+      if (resp.ok && respRes.length) {
         setError(false);
         setSechWorld(world);
-        const { results } = respRes;
         setObjWorld(ObjWorld => ({
           ...ObjWorld,
-          sound: results[0].lexicalEntries[0].entries[0].pronunciations,
-          lexicalEntries: results[0].lexicalEntries[0],
+          sound: respRes[0].phonetics,
+          lexicalEntries: respRes[0],
         }));
       } else {
         setError(true);
@@ -130,10 +135,9 @@ function Body() {
   }
 
   const handleSound = () => {
-    if (objWorld.sound) {
-      const sound = objWorld.sound[0].audioFile
+    if (objWorld.sound?.length) {
+      const sound = objWorld.sound[0].audio
       new Audio(sound).play();
-
     }
   }
 
@@ -147,7 +151,6 @@ function Body() {
 
       </div>
     </div>
-
   )
 }
 
