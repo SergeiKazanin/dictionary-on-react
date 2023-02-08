@@ -6,15 +6,6 @@ body {
 }
 
 .app {
-  #dark {
-    background: rgb(0, 0, 0);
-    color: rgb(255, 255, 255);
-  }
-
-  #dark-light {
-    background-color: rgb(75, 75, 75);
-    color: rgb(255, 255, 255);
-  }
   .main {
     background: rgb(239, 226, 251);
     margin-left: auto;
@@ -30,8 +21,11 @@ body {
     padding: 10px;
     border-radius: 10px;
 
+    &.dark {
+      background: rgb(0, 0, 0);
+      color: rgb(255, 255, 255);
+    }
 
-    
     .form {
       box-sizing: border-box;
       width: 100%;
@@ -42,6 +36,11 @@ body {
       /*border: 1px solid rgb(255, 171, 171);*/
       padding: 10px;
       border-radius: 5px;
+
+      &.dark-light {
+        background-color: rgb(75, 75, 75);
+        color: rgb(255, 255, 255);
+      }
 
       .form-group {
         box-sizing: border-box;
@@ -59,6 +58,10 @@ body {
       flex-direction: column;
       gap: 20px;
 
+      &.dark-light {
+        background-color: rgb(75, 75, 75);
+        color: rgb(255, 255, 255);
+      }
       .res-info {
         box-sizing: border-box;
         width: 100%;

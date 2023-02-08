@@ -28,7 +28,7 @@ const ThemeContext = React.createContext(themes.light);
 function SearchForm(props) {
   const theme = useContext(ThemeContext);
   return (
-    <form className="form" id={theme.light} onSubmit={(e) => props.onSubmit(e)}>
+    <form className={`form ${theme.light}`} onSubmit={(e) => props.onSubmit(e)}>
       <div className="form-group">
         <TextField
           id="outlined-basic"
@@ -88,7 +88,7 @@ function Result(props) {
     const meanings = props.objWorld.lexicalEntries.meanings[0];
 
     return (
-      <div className="results" id={theme.light}>
+      <div className={`results ${theme.light}`}>
         <div className="res-info">
           <div className="res-world">{props.world}</div>
           <div className="res-sound">
@@ -193,7 +193,7 @@ function Body() {
   return (
     <ThemeContext.Provider value={currentTheme}>
       <div className="app">
-        <div className="main" id={currentTheme.theme}>
+        <div className={`main ${currentTheme.theme}`}>
           <h1>Dictionary</h1>
           <div className="SelectTheme">
             <IconButton onClick={() => handleChangeTheme()}>
