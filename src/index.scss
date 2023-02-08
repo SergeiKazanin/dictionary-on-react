@@ -6,8 +6,17 @@ body {
 }
 
 .app {
+  #dark {
+    background: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
+  }
+
+  #dark-light {
+    background-color: rgb(75, 75, 75);
+    color: rgb(255, 255, 255);
+  }
   .main {
-    background: rgb(190, 141, 251);
+    background: rgb(239, 226, 251);
     margin-left: auto;
     margin-right: auto;
     width: 600px;
@@ -21,6 +30,8 @@ body {
     padding: 10px;
     border-radius: 10px;
 
+
+    
     .form {
       box-sizing: border-box;
       width: 100%;
@@ -39,6 +50,8 @@ body {
     }
 
     .results {
+      padding: 10px;
+      border-radius: 5px;
       box-sizing: border-box;
       width: 100%;
       display: flex;
@@ -63,7 +76,7 @@ body {
       }
 
       .res-list {
-        .phras {
+        .phrase {
           display: flex;
           align-items: flex-start;
           gap: 20px;
@@ -99,7 +112,7 @@ body {
 
       .results {
         .res-list {
-          .phras {
+          .phrase {
             display: inline;
 
             width: auto;

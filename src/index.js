@@ -1,20 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.scss";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
-import { ConstructionOutlined } from "@mui/icons-material";
+import DarkModeIcon from "@mui/icons-material/DarkMode";
+import LightModeIcon from "@mui/icons-material/LightMode";
+import IconButton from "@mui/material/IconButton";
 
-function SerchForm(props) {
+import { brown } from "@mui/material/colors";
+
+const themes = {
+  light: {
+    theme: "light",
+    light: "light",
+    colorButton: brown[900],
+  },
+  dark: {
+    theme: "dark",
+    light: "dark-light",
+    colorButton: brown[200],
+  },
+};
+
+const ThemeContext = React.createContext(themes.light);
+
+function SearchForm(props) {
+  const theme = useContext(ThemeContext);
   return (
-    <form className="form" onSubmit={(e) => props.onSabmit(e)}>
+    <form className="form" id={theme.light} onSubmit={(e) => props.onSubmit(e)}>
       <div className="form-group">
         <TextField
           id="outlined-basic"
           onChange={(e) => props.onChange(e)}
           value={props.world}
-          label="World"
+          label="Word"
           variant="outlined"
           size="small"
           fullWidth={true}
@@ -61,19 +81,20 @@ function PrintArrObj(props) {
   }
 }
 
-function Resalt(props) {
+function Result(props) {
+  const theme = useContext(ThemeContext);
   if (props.world.length) {
     const res = props.objWorld.lexicalEntries;
     const meanings = props.objWorld.lexicalEntries.meanings[0];
+
     return (
-      <div className="results">
+      <div className="results" id={theme.light}>
         <div className="res-info">
           <div className="res-world">{props.world}</div>
           <div className="res-sound">
-            <VolumeUpIcon
-              sx={{ fontSize: 40 }}
-              onClick={() => props.onClick()}
-            />
+            <IconButton aria-label="volumeUp" onClick={() => props.onClick()}>
+              <VolumeUpIcon sx={{ fontSize: 40, color: theme.colorButton }} />
+            </IconButton>
           </div>
         </div>
         <div className="res-list">
@@ -88,9 +109,9 @@ function Resalt(props) {
               Wiktionary.org about "{props.world}"
             </a>
           </div>
-          <div className="phras">
+          <div className="phrase">
             <PrintArr p={"Antonyms"} arr={meanings.antonyms} />
-            <PrintArr p={"Synonymus"} arr={meanings.synonyms} />
+            <PrintArr p={"Synonyms"} arr={meanings.synonyms} />
           </div>
           <PrintArrObj p={"Definitions"} arr={meanings.definitions} />
         </div>
@@ -107,7 +128,7 @@ function ErrorRes(props) {
 
 function Body() {
   const url = "https://api.dictionaryapi.dev/api/v2/entries/en/";
-
+  const [currentTheme, setCurrentTheme] = useState(themes.light);
   const [world, setWorld] = useState("");
   const [sechWorld, setSechWorld] = useState("");
   const [error, setError] = useState(false);
@@ -116,11 +137,11 @@ function Body() {
     lexicalEntries: {},
   });
 
-  const handleCangeText = (e) => {
+  const handleChangeText = (e) => {
     setWorld(e.target.value);
   };
 
-  const handleSabmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!world.trim()) return;
@@ -128,7 +149,7 @@ function Body() {
     try {
       const resp = await fetch(`${url}${world}`);
       const respRes = await resp.json();
-      console.log(respRes);
+
       if (resp.ok && respRes.length) {
         setError(false);
         setSechWorld(world);
@@ -153,19 +174,42 @@ function Body() {
     }
   };
 
+  const handleChangeTheme = () => {
+    setCurrentTheme(currentTheme.theme === "dark" ? themes.light : themes.dark);
+  };
+
+  function SetIconDarkMode(props) {
+    if (props.mode.theme === "light") {
+      return (
+        <LightModeIcon sx={{ fontSize: 40, color: currentTheme.colorButton }} />
+      );
+    } else {
+      return (
+        <DarkModeIcon sx={{ fontSize: 40, color: currentTheme.colorButton }} />
+      );
+    }
+  }
+
   return (
-    <div className="app">
-      <div className="main">
-        <h1>Dictionary</h1>
-        <SerchForm
-          onChange={handleCangeText}
-          onSabmit={handleSabmit}
-          world={world}
-        />
-        <ErrorRes errorTrue={error} />
-        <Resalt world={sechWorld} objWorld={objWorld} onClick={handleSound} />
+    <ThemeContext.Provider value={currentTheme}>
+      <div className="app">
+        <div className="main" id={currentTheme.theme}>
+          <h1>Dictionary</h1>
+          <div className="SelectTheme">
+            <IconButton onClick={() => handleChangeTheme()}>
+              <SetIconDarkMode mode={currentTheme} />
+            </IconButton>
+          </div>
+          <SearchForm
+            onChange={handleChangeText}
+            onSubmit={handleSubmit}
+            world={world}
+          />
+          <ErrorRes errorTrue={error} />
+          <Result world={sechWorld} objWorld={objWorld} onClick={handleSound} />
+        </div>
       </div>
-    </div>
+    </ThemeContext.Provider>
   );
 }
 
