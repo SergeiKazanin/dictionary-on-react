@@ -7,6 +7,7 @@ import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import IconButton from "@mui/material/IconButton";
+import Link from "@mui/material/Link";
 
 import { brown } from "@mui/material/colors";
 
@@ -85,8 +86,6 @@ function Result(props) {
   const theme = useContext(ThemeContext);
   if (props.world.length) {
     const res = props.objWorld.lexicalEntries;
-    const meanings = props.objWorld.lexicalEntries.meanings[0];
-
     return (
       <div className={`results ${theme.light}`}>
         <div className="res-info">
@@ -97,7 +96,7 @@ function Result(props) {
             </IconButton>
           </div>
         </div>
-        <div className="res-list">
+        {/* <div className="res-list">
           <div>
             <p>{meanings.partOfSpeech.toLocaleUpperCase()}</p>
           </div>
@@ -105,16 +104,21 @@ function Result(props) {
             <p>{res.phonetic}</p>
           </div>
           <div>
-            <a href={res.sourceUrls[0]} rel="noreferrer" target="_blank">
+            <Link
+              href={res.sourceUrls[0]}
+              underline="hover"
+              rel="noreferrer"
+              target="_blank"
+            >
               Wiktionary.org about "{props.world}"
-            </a>
+            </Link>
           </div>
           <div className="phrase">
             <PrintArr p={"Antonyms"} arr={meanings.antonyms} />
             <PrintArr p={"Synonyms"} arr={meanings.synonyms} />
           </div>
           <PrintArrObj p={"Definitions"} arr={meanings.definitions} />
-        </div>
+        </div> */}
       </div>
     );
   }
@@ -127,7 +131,9 @@ function ErrorRes(props) {
 }
 
 function Body() {
-  const url = "https://api.dictionaryapi.dev/api/v2/entries/en/";
+  //const url = "https://api.dictionaryapi.dev/api/v2/entries/en/";
+  const url =
+    "https://www.dictionaryapi.com/api/v3/references/collegiate/json/";
   const [currentTheme, setCurrentTheme] = useState(themes.light);
   const [world, setWorld] = useState("");
   const [sechWorld, setSechWorld] = useState("");
@@ -147,15 +153,18 @@ function Body() {
     if (!world.trim()) return;
 
     try {
-      const resp = await fetch(`${url}${world}`);
+      const resp = await fetch(
+        `${url}${world}?key=34c69346-780e-4ac3-a06e-709641223ea1`
+      );
       const respRes = await resp.json();
 
       if (resp.ok && respRes.length) {
+        console.log(respRes[0]);
         setError(false);
         setSechWorld(world);
-        setObjWorld((ObjWorld) => ({
-          ...ObjWorld,
-          sound: respRes[0].phonetics,
+        setObjWorld((objWorld) => ({
+          ...objWorld,
+          sound: respRes[0].hwi.prs[0].sound,
           lexicalEntries: respRes[0],
         }));
       } else {
@@ -168,8 +177,9 @@ function Body() {
   };
 
   const handleSound = () => {
-    if (objWorld.sound?.length) {
-      const sound = objWorld.sound[0].audio;
+    if (objWorld.sound) {
+      const sound = `https://media.merriam-webster.com/audio/prons/en/us/mp3/${objWorld.sound.audio.charAt(0)}/${objWorld.sound.audio}.mp3`;
+      console.log(sound);
       new Audio(sound).play();
     }
   };
