@@ -79,19 +79,14 @@ body {
       }
 
       .res-list {
-        .phrase {
-          display: flex;
-          align-items: flex-start;
-          gap: 20px;
-        }
 
         li {
           list-style-type: none;
-          margin: 5px;
+          margin: 2px;
         }
 
         p {
-          margin-bottom: 5px;
+          margin: 5px 0;
         }
 
         ul {

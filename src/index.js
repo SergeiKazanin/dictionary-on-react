@@ -53,7 +53,7 @@ function ElBr(props) {
 }
 
 function PrintArr(props) {
-  if (props.arr.length) {
+  if (props.arr?.length) {
     return (
       <div>
         <p>{props.p}</p>
@@ -68,13 +68,13 @@ function PrintArr(props) {
 }
 
 function PrintArrObj(props) {
-  if (props.arr.length) {
+  if (props.arr?.length) {
     return (
       <div>
         <p>{props.p}</p>
         <ul>
           {props.arr.map((el, i) => (
-            <ElBr key={i} el={el.definition} />
+            <ElBr key={i} el={el.drp} />
           ))}
         </ul>
       </div>
@@ -96,29 +96,17 @@ function Result(props) {
             </IconButton>
           </div>
         </div>
-        {/* <div className="res-list">
+        <div className="res-list">
           <div>
-            <p>{meanings.partOfSpeech.toLocaleUpperCase()}</p>
+            <p>{res.fl}</p>
           </div>
+          {}
           <div>
-            <p>{res.phonetic}</p>
+            <p>{res.hwi?.prs !== undefined ? res.hwi.prs[0].mw : null}</p>
           </div>
-          <div>
-            <Link
-              href={res.sourceUrls[0]}
-              underline="hover"
-              rel="noreferrer"
-              target="_blank"
-            >
-              Wiktionary.org about "{props.world}"
-            </Link>
-          </div>
-          <div className="phrase">
-            <PrintArr p={"Antonyms"} arr={meanings.antonyms} />
-            <PrintArr p={"Synonyms"} arr={meanings.synonyms} />
-          </div>
-          <PrintArrObj p={"Definitions"} arr={meanings.definitions} />
-        </div> */}
+          <PrintArr p={"Definitions"} arr={res.shortdef} />
+          <PrintArrObj p={"Phrasal verb"} arr={res.dros} />
+        </div>
       </div>
     );
   }
@@ -131,7 +119,6 @@ function ErrorRes(props) {
 }
 
 function Body() {
-  //const url = "https://api.dictionaryapi.dev/api/v2/entries/en/";
   const url =
     "https://www.dictionaryapi.com/api/v3/references/collegiate/json/";
   const [currentTheme, setCurrentTheme] = useState(themes.light);
@@ -164,7 +151,7 @@ function Body() {
         setSechWorld(world);
         setObjWorld((objWorld) => ({
           ...objWorld,
-          sound: respRes[0].hwi.prs[0].sound,
+          sound: respRes[0].hwi,
           lexicalEntries: respRes[0],
         }));
       } else {
@@ -177,9 +164,11 @@ function Body() {
   };
 
   const handleSound = () => {
-    if (objWorld.sound) {
-      const sound = `https://media.merriam-webster.com/audio/prons/en/us/mp3/${objWorld.sound.audio.charAt(0)}/${objWorld.sound.audio}.mp3`;
-      console.log(sound);
+    if (objWorld.sound?.prs) {
+      const prs = objWorld.sound.prs[0].sound.audio;
+      const sound = `https://media.merriam-webster.com/audio/prons/en/us/mp3/${prs.charAt(
+        0
+      )}/${prs}.mp3`;
       new Audio(sound).play();
     }
   };
