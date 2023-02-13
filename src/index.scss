@@ -1,14 +1,13 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap");
 
 body {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
-
+  font-family: "Roboto", sans-serif;
 }
 
 .app {
   .main {
-    background: rgb(190, 141, 251);
+    background: rgb(239, 226, 251);
     margin-left: auto;
     margin-right: auto;
     width: 600px;
@@ -22,6 +21,11 @@ body {
     padding: 10px;
     border-radius: 10px;
 
+    &.dark {
+      background: rgb(0, 0, 0);
+      color: rgb(255, 255, 255);
+    }
+
     .form {
       box-sizing: border-box;
       width: 100%;
@@ -33,14 +37,20 @@ body {
       padding: 10px;
       border-radius: 5px;
 
+      &.dark-light {
+        background-color: rgb(75, 75, 75);
+        color: rgb(255, 255, 255);
+      }
+
       .form-group {
         box-sizing: border-box;
         width: 100%;
-
       }
     }
 
     .results {
+      padding: 10px;
+      border-radius: 5px;
       box-sizing: border-box;
       width: 100%;
       display: flex;
@@ -48,6 +58,10 @@ body {
       flex-direction: column;
       gap: 20px;
 
+      &.dark-light {
+        background-color: rgb(75, 75, 75);
+        color: rgb(255, 255, 255);
+      }
       .res-info {
         box-sizing: border-box;
         width: 100%;
@@ -65,28 +79,20 @@ body {
       }
 
       .res-list {
-        .phras {
-          display: flex;
-          align-items: flex-start;
-          gap: 20px;
-        }
-
         li {
           list-style-type: none;
-          margin: 0;
+          margin: 2px;
         }
 
         p {
-          margin-bottom: 5px;
+          margin: 5px 0;
         }
 
         ul {
           margin: 0;
           padding-left: 10px;
-          /* Отступ слева в браузере Firefox, Safari, Chrome */
         }
       }
-
     }
 
     .error {
@@ -95,14 +101,14 @@ body {
   }
 }
 
-@media(max-width: 600px) {
+@media (max-width: 600px) {
   .app {
     .main {
       width: auto;
 
       .results {
         .res-list {
-          .phras {
+          .phrase {
             display: inline;
 
             width: auto;
