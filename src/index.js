@@ -8,7 +8,6 @@ import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import IconButton from "@mui/material/IconButton";
 
-
 import { brown } from "@mui/material/colors";
 
 const themes = {
@@ -114,7 +113,7 @@ function Result(props) {
 
 function ErrorRes(props) {
   if (props.errorTrue) {
-    return <div className="error">World not found</div>;
+    return <div className="error">Word not found</div>;
   }
 }
 
