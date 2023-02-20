@@ -33,7 +33,7 @@ function SearchForm(props) {
         <TextField
           id="outlined-basic"
           onChange={(e) => props.onChange(e)}
-          value={props.world}
+          value={props.word}
           label="Word"
           variant="outlined"
           size="small"
@@ -83,12 +83,12 @@ function PrintArrObj(props) {
 
 function Result(props) {
   const theme = useContext(ThemeContext);
-  if (props.world.length) {
-    const res = props.objWorld.lexicalEntries;
+  if (props.word.length) {
+    const res = props.objWord.lexicalEntries;
     return (
       <div className={`results ${theme.light}`}>
         <div className="res-info">
-          <div className="res-world">{props.world}</div>
+          <div className="res-word">{props.word}</div>
           <div className="res-sound">
             <IconButton aria-label="volumeUp" onClick={() => props.onClick()}>
               <VolumeUpIcon sx={{ fontSize: 40, color: theme.colorButton }} />
@@ -121,41 +121,41 @@ function Body() {
   const url =
     "https://www.dictionaryapi.com/api/v3/references/collegiate/json/";
   const [currentTheme, setCurrentTheme] = useState(themes.light);
-  const [world, setWorld] = useState("");
-  const [sechWorld, setSechWorld] = useState("");
+  const [word, setWord] = useState("");
+  const [sechWord, setSechWord] = useState("");
   const [error, setError] = useState(false);
-  const [objWorld, setObjWorld] = useState({
+  const [objWord, setObjWord] = useState({
     sound: [],
     lexicalEntries: {},
   });
 
   const handleChangeText = (e) => {
-    setWorld(e.target.value);
+    setWord(e.target.value);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!world.trim()) return;
+    if (!word.trim()) return;
 
     try {
       const resp = await fetch(
-        `${url}${world}?key=34c69346-780e-4ac3-a06e-709641223ea1`
+        `${url}${word}?key=34c69346-780e-4ac3-a06e-709641223ea1`
       );
       const respRes = await resp.json();
 
       if (resp.ok && respRes.length) {
         console.log(respRes[0]);
         setError(false);
-        setSechWorld(world);
-        setObjWorld((objWorld) => ({
-          ...objWorld,
+        setSechWord(word);
+        setObjWord((objWord) => ({
+          ...objWord,
           sound: respRes[0].hwi,
           lexicalEntries: respRes[0],
         }));
       } else {
         setError(true);
-        setSechWorld("");
+        setSechWord("");
       }
     } catch (err) {
       console.log(err);
@@ -163,8 +163,8 @@ function Body() {
   };
 
   const handleSound = () => {
-    if (objWorld.sound?.prs) {
-      const prs = objWorld.sound.prs[0].sound.audio;
+    if (objWord.sound?.prs) {
+      const prs = objWord.sound.prs[0].sound.audio;
       const sound = `https://media.merriam-webster.com/audio/prons/en/us/mp3/${prs.charAt(
         0
       )}/${prs}.mp3`;
@@ -201,10 +201,10 @@ function Body() {
           <SearchForm
             onChange={handleChangeText}
             onSubmit={handleSubmit}
-            world={world}
+            word={word}
           />
           <ErrorRes errorTrue={error} />
-          <Result world={sechWorld} objWorld={objWorld} onClick={handleSound} />
+          <Result word={sechWord} objWord={objWord} onClick={handleSound} />
         </div>
       </div>
     </ThemeContext.Provider>
