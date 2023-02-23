@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.scss";
 import Button from "@mui/material/Button";
@@ -9,6 +9,7 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import IconButton from "@mui/material/IconButton";
 
 import { brown } from "@mui/material/colors";
+import { light } from "@mui/material/styles/createPalette";
 
 const themes = {
   light: {
@@ -145,7 +146,6 @@ function Body() {
       const respRes = await resp.json();
 
       if (resp.ok && respRes.length) {
-        console.log(respRes[0]);
         setError(false);
         setSechWord(word);
         setObjWord((objWord) => ({
@@ -174,6 +174,10 @@ function Body() {
 
   const handleChangeTheme = () => {
     setCurrentTheme(currentTheme.theme === "dark" ? themes.light : themes.dark);
+    localStorage.setItem(
+      "theme",
+      JSON.stringify(currentTheme.theme === "dark" ? "light" : "dark")
+    );
   };
 
   function SetIconDarkMode(props) {
@@ -187,6 +191,17 @@ function Body() {
       );
     }
   }
+
+  useEffect(() => {
+    const theme = JSON.parse(localStorage.getItem("theme"));
+
+    if (theme === "light" || theme === null) {
+      setCurrentTheme(themes.light);
+    } else {
+      setCurrentTheme(themes.dark);
+    }
+    return () => {};
+  }, [currentTheme.theme]);
 
   return (
     <ThemeContext.Provider value={currentTheme}>
