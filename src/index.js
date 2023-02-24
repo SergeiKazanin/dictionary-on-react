@@ -48,7 +48,7 @@ function SearchForm(props) {
   );
 }
 
-function ElBr(props) {
+function ElLi(props) {
   return <li>{props.el}</li>;
 }
 
@@ -59,7 +59,7 @@ function PrintArr(props) {
         <p>{props.p}</p>
         <ul>
           {props.arr.map((el, i) => (
-            <ElBr key={i} el={el} />
+            <ElLi key={i} el={el} />
           ))}
         </ul>
       </div>
@@ -74,7 +74,7 @@ function PrintArrObj(props) {
         <p>{props.p}</p>
         <ul>
           {props.arr.map((el, i) => (
-            <ElBr key={i} el={el.drp} />
+            <ElLi key={i} el={el.drp} />
           ))}
         </ul>
       </div>
