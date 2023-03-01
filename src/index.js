@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import ReactDOM from "react-dom/client";
-import "./index.scss";
+import "./index.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
@@ -9,7 +9,6 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import IconButton from "@mui/material/IconButton";
 
 import { brown } from "@mui/material/colors";
-import { light } from "@mui/material/styles/createPalette";
 
 const themes = {
   light: {
@@ -29,8 +28,11 @@ const ThemeContext = React.createContext(themes.light);
 function SearchForm(props) {
   const theme = useContext(ThemeContext);
   return (
-    <form className={`form ${theme.light}`} onSubmit={(e) => props.onSubmit(e)}>
-      <div className="form-group">
+    <form
+      className="flex justify-between gap-3 w-full p-2 rounded-md border-2"
+      onSubmit={(e) => props.onSubmit(e)}
+    >
+      <div className="w-full">
         <TextField
           id="outlined-basic"
           onChange={(e) => props.onChange(e)}
@@ -48,18 +50,14 @@ function SearchForm(props) {
   );
 }
 
-function ElLi(props) {
-  return <li>{props.el}</li>;
-}
-
 function PrintArr(props) {
   if (props.arr?.length) {
     return (
       <div>
         <p>{props.p}</p>
-        <ul>
+        <ul className="ml-3">
           {props.arr.map((el, i) => (
-            <ElLi key={i} el={el} />
+            <li key={i}> {el} </li>
           ))}
         </ul>
       </div>
@@ -72,9 +70,9 @@ function PrintArrObj(props) {
     return (
       <div>
         <p>{props.p}</p>
-        <ul>
+        <ul className="ml-3">
           {props.arr.map((el, i) => (
-            <ElLi key={i} el={el.drp} />
+            <li key={i}> {el.drp} </li>
           ))}
         </ul>
       </div>
@@ -87,12 +85,12 @@ function Result(props) {
   if (props.word.length) {
     const res = props.objWord.lexicalEntries;
     return (
-      <div className={`results ${theme.light}`}>
-        <div className="res-info">
-          <div className="res-word">{props.word}</div>
+      <div className="p-2 border-2 rounded-md w-full flex flex-col gap-3 justify-center">
+        <div className="flex justify-between items-center gap-3 w-full rounded-md border-2 border-stone-900">
+          <div className="text-2xl ml-3">{props.word}</div>
           <div className="res-sound">
             <IconButton aria-label="volumeUp" onClick={() => props.onClick()}>
-              <VolumeUpIcon sx={{ fontSize: 40, color: theme.colorButton }} />
+              <VolumeUpIcon sx={{ fontSize: 30, color: theme.colorButton }} />
             </IconButton>
           </div>
         </div>
@@ -183,11 +181,11 @@ function Body() {
   function SetIconDarkMode(props) {
     if (props.mode.theme === "light") {
       return (
-        <LightModeIcon sx={{ fontSize: 40, color: currentTheme.colorButton }} />
+        <LightModeIcon sx={{ fontSize: 30, color: currentTheme.colorButton }} />
       );
     } else {
       return (
-        <DarkModeIcon sx={{ fontSize: 40, color: currentTheme.colorButton }} />
+        <DarkModeIcon sx={{ fontSize: 30, color: currentTheme.colorButton }} />
       );
     }
   }
@@ -206,12 +204,17 @@ function Body() {
   return (
     <ThemeContext.Provider value={currentTheme}>
       <div className="app">
-        <div className={`main ${currentTheme.theme}`}>
-          <h1>Dictionary</h1>
-          <div className="SelectTheme">
-            <IconButton onClick={() => handleChangeTheme()}>
-              <SetIconDarkMode mode={currentTheme} />
-            </IconButton>
+        <div className="bg-orange-300 font-roboto p-5 gap-3 mt-10 ml-auto mr-auto rounded-md w-96 flex justify-center items-center flex-col">
+          <div className="flex w-full">
+            <div className="basis-1/5"></div>
+            <div className="basis-3/5 flex justify-center items-end">
+              <h1 className="text-2xl">Dictionary</h1>
+            </div>
+            <div className="basis-1/5 flex justify-end">
+              <IconButton onClick={() => handleChangeTheme()}>
+                <SetIconDarkMode mode={currentTheme} />
+              </IconButton>
+            </div>
           </div>
           <SearchForm
             onChange={handleChangeText}
