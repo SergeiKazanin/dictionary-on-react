@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import Button from "@mui/material/Button";
@@ -7,42 +7,26 @@ import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import IconButton from "@mui/material/IconButton";
-
-import { brown } from "@mui/material/colors";
-
-const themes = {
-  light: {
-    theme: "light",
-    light: "light",
-    colorButton: brown[900],
-  },
-  dark: {
-    theme: "dark",
-    light: "dark-light",
-    colorButton: brown[200],
-  },
-};
-
-const ThemeContext = React.createContext(themes.light);
+import {
+  Experimental_CssVarsProvider as CssVarsProvider,
+  useColorScheme,
+} from "@mui/material/styles";
 
 function SearchForm(props) {
-  const theme = useContext(ThemeContext);
   return (
     <form
-      className="flex justify-between gap-3 w-full p-2 rounded-md border-2"
+      className="flex justify-between items-center gap-3 w-full p-2 rounded-md border-0 dark:bg-neutral-700"
       onSubmit={(e) => props.onSubmit(e)}
     >
-      <div className="w-full">
-        <TextField
-          id="outlined-basic"
-          onChange={(e) => props.onChange(e)}
-          value={props.word}
-          label="Word"
-          variant="outlined"
-          size="small"
-          fullWidth={true}
-        />
-      </div>
+      <TextField
+        id="outlined-basic"
+        onChange={(e) => props.onChange(e)}
+        value={props.word}
+        label="Word"
+        variant="outlined"
+        size="small"
+        fullWidth={true}
+      />
       <Button type="submit" variant="contained">
         Search
       </Button>
@@ -81,16 +65,15 @@ function PrintArrObj(props) {
 }
 
 function Result(props) {
-  const theme = useContext(ThemeContext);
   if (props.word.length) {
     const res = props.objWord.lexicalEntries;
     return (
-      <div className="p-2 border-2 rounded-md w-full flex flex-col gap-3 justify-center">
-        <div className="flex justify-between items-center gap-3 w-full rounded-md border-2 border-stone-900">
+      <div className="p-2 border-0 dark:bg-neutral-700 rounded-md w-full flex flex-col gap-3 justify-center">
+        <div className="flex dark:border-white justify-between items-center gap-3 w-full rounded-md border-2 border-stone-900">
           <div className="text-2xl ml-3">{props.word}</div>
           <div className="res-sound">
             <IconButton aria-label="volumeUp" onClick={() => props.onClick()}>
-              <VolumeUpIcon sx={{ fontSize: 30, color: theme.colorButton }} />
+              <VolumeUpIcon sx={{ fontSize: 30 }} />
             </IconButton>
           </div>
         </div>
@@ -119,7 +102,7 @@ function ErrorRes(props) {
 function Body() {
   const url =
     "https://www.dictionaryapi.com/api/v3/references/collegiate/json/";
-  const [currentTheme, setCurrentTheme] = useState(themes.light);
+
   const [word, setWord] = useState("");
   const [sechWord, setSechWord] = useState("");
   const [error, setError] = useState(false);
@@ -127,6 +110,7 @@ function Body() {
     sound: [],
     lexicalEntries: {},
   });
+  const { mode, setMode } = useColorScheme();
 
   const handleChangeText = (e) => {
     setWord(e.target.value);
@@ -171,63 +155,63 @@ function Body() {
   };
 
   const handleChangeTheme = () => {
-    setCurrentTheme(currentTheme.theme === "dark" ? themes.light : themes.dark);
-    localStorage.setItem(
-      "theme",
-      JSON.stringify(currentTheme.theme === "dark" ? "light" : "dark")
-    );
+    setMode(mode === "dark" ? "light" : "dark");
+
+    localStorage.setItem("theme", mode === "dark" ? "light" : "dark");
   };
 
   function SetIconDarkMode(props) {
-    if (props.mode.theme === "light") {
-      return (
-        <LightModeIcon sx={{ fontSize: 30, color: currentTheme.colorButton }} />
-      );
+    if (props.mode === "light") {
+      return <LightModeIcon sx={{ fontSize: 30 }} />;
     } else {
-      return (
-        <DarkModeIcon sx={{ fontSize: 30, color: currentTheme.colorButton }} />
-      );
+      return <DarkModeIcon sx={{ fontSize: 30 }} />;
     }
   }
 
   useEffect(() => {
-    const theme = JSON.parse(localStorage.getItem("theme"));
-
-    if (theme === "light" || theme === null) {
-      setCurrentTheme(themes.light);
+    if (
+      localStorage.theme === "dark" ||
+      (!("theme" in localStorage) &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      setMode("dark");
+      document.documentElement.classList.add("dark");
     } else {
-      setCurrentTheme(themes.dark);
+      setMode("light");
+      document.documentElement.classList.remove("dark");
     }
     return () => {};
-  }, [currentTheme.theme]);
+  }, [mode, setMode]);
 
   return (
-    <ThemeContext.Provider value={currentTheme}>
-      <div className="app">
-        <div className="bg-orange-300 font-roboto p-5 gap-3 mt-10 ml-auto mr-auto rounded-md w-96 flex justify-center items-center flex-col">
-          <div className="flex w-full">
-            <div className="basis-1/5"></div>
-            <div className="basis-3/5 flex justify-center items-end">
-              <h1 className="text-2xl">Dictionary</h1>
-            </div>
-            <div className="basis-1/5 flex justify-end">
-              <IconButton onClick={() => handleChangeTheme()}>
-                <SetIconDarkMode mode={currentTheme} />
-              </IconButton>
-            </div>
+    <div className="app">
+      <div className="bg-violet-200 dark:bg-black dark:text-white font-roboto p-5 gap-3 mt-10 ml-auto mr-auto rounded-md w-auto md:w-760 flex justify-center items-center flex-col">
+        <div className="flex w-full">
+          <div className="basis-1/5"></div>
+          <div className="basis-3/5 flex justify-center items-end">
+            <h1 className="text-2xl">Dictionary</h1>
           </div>
-          <SearchForm
-            onChange={handleChangeText}
-            onSubmit={handleSubmit}
-            word={word}
-          />
-          <ErrorRes errorTrue={error} />
-          <Result word={sechWord} objWord={objWord} onClick={handleSound} />
+          <div className="basis-1/5 flex justify-end">
+            <IconButton onClick={() => handleChangeTheme()}>
+              <SetIconDarkMode mode={mode} />
+            </IconButton>
+          </div>
         </div>
+        <SearchForm
+          onChange={handleChangeText}
+          onSubmit={handleSubmit}
+          word={word}
+        />
+        <ErrorRes errorTrue={error} />
+        <Result word={sechWord} objWord={objWord} onClick={handleSound} />
       </div>
-    </ThemeContext.Provider>
+    </div>
   );
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<Body />);
+root.render(
+  <CssVarsProvider> 
+    <Body />
+  </CssVarsProvider>
+);
