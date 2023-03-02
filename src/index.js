@@ -185,7 +185,10 @@ function Body() {
 
   return (
     <div className="app">
-      <div className="bg-violet-200 dark:bg-black dark:text-white font-roboto p-5 gap-3 mt-10 ml-auto mr-auto rounded-md w-auto md:w-760 flex justify-center items-center flex-col">
+      <div
+        className="bg-violet-200 dark:bg-slate-900 dark:text-white font-roboto p-5 gap-3
+       mt-10 ml-auto mr-auto rounded-md w-auto md:w-760 flex justify-center items-center flex-col"
+      >
         <div className="flex w-full">
           <div className="basis-1/5"></div>
           <div className="basis-3/5 flex justify-center items-end">
@@ -211,7 +214,7 @@ function Body() {
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <CssVarsProvider> 
+  <CssVarsProvider>
     <Body />
   </CssVarsProvider>
 );
