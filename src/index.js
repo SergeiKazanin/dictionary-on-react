@@ -14,17 +14,23 @@ import {
   useColorScheme,
 } from "@mui/material/styles";
 
-function SearchForm(props) {
+import { handleChangeText, handleError, getRes } from "./store/slice";
+
+function SearchForm() {
   const word = useSelector((store) => store.diction.word);
+  const dispatch = useDispatch();
 
   return (
     <form
       className="flex justify-between items-center gap-3 w-full p-2 rounded-md border-0 dark:bg-neutral-700"
-      onSubmit={(e) => props.onSubmit(e)}
+      onSubmit={(e) => {
+        e.preventDefault();
+        dispatch(getRes(word));
+      }}
     >
       <TextField
         id="outlined-basic"
-        onChange={(e) => props.onChange(e)}
+        onChange={(e) => dispatch(handleChangeText(e.target.value))}
         value={word}
         label="Word"
         variant="outlined"
@@ -68,37 +74,52 @@ function PrintArrObj(props) {
   }
 }
 
-function Result(props) {
-  if (props.word.length) {
-    const res = props.objWord.lexicalEntries;
+function Result() {
+  const error = useSelector((store) => store.diction.error);
+  const res = useSelector((state) => state.diction.res);
+  const res0 = res[0]
+  console.log(res0);
+
+  const handleSound = () => {
+    if (res0.hwi?.prs) {
+      const prs = res0.hwi.prs[0].sound.audio;
+      const sound = `https://media.merriam-webster.com/audio/prons/en/us/mp3/${prs.charAt(
+        0
+      )}/${prs}.mp3`;
+      new Audio(sound).play();
+    }
+  };
+
+  if (!error && res.length) {
     return (
       <div className="p-2 border-0 dark:bg-neutral-700 rounded-md w-full flex flex-col gap-3 justify-center">
         <div className="flex dark:border-white justify-between items-center gap-3 w-full rounded-md border-2 border-stone-900">
-          <div className="text-2xl ml-3">{props.word}</div>
+          <div className="text-2xl ml-3">{res0.hwi?.hw}</div>
           <div className="res-sound">
-            <IconButton aria-label="volumeUp" onClick={() => props.onClick()}>
+            <IconButton aria-label="volumeUp" onClick={() => handleSound()}>
               <VolumeUpIcon sx={{ fontSize: 30 }} />
             </IconButton>
           </div>
         </div>
         <div className="res-list">
           <div>
-            <p>{res.fl}</p>
+            <p>{res0?.fl}</p>
           </div>
           {}
           <div>
-            <p>{res.hwi?.prs !== undefined ? res.hwi.prs[0].mw : null}</p>
+            <p>{res0.hwi?.prs !== undefined ? res0.hwi.prs[0].mw : null}</p>
           </div>
-          <PrintArr p={"Definitions"} arr={res.shortdef} />
-          <PrintArrObj p={"Phrasal verb"} arr={res.dros} />
+          <PrintArr p={"Definitions"} arr={res0.shortdef} />
+          <PrintArrObj p={"Phrasal verb"} arr={res0.dros} />
         </div>
       </div>
     );
   }
 }
 
-function ErrorRes(props) {
-  if (props.errorTrue) {
+function ErrorRes() {
+  const error = useSelector((store) => store.diction.error);
+  if (error) {
     return <div className="error">Word not found</div>;
   }
 }
@@ -107,18 +128,10 @@ function Body() {
   const url =
     "https://www.dictionaryapi.com/api/v3/references/collegiate/json/";
 
-  const [word, setWord] = useState("");
-  const [sechWord, setSechWord] = useState("");
-  const [error, setError] = useState(false);
-  const [objWord, setObjWord] = useState({
-    sound: [],
-    lexicalEntries: {},
-  });
-  const { mode, setMode } = useColorScheme();
+  const word = useSelector((store) => store.diction.word);
+  const dispatch = useDispatch();
 
-  const handleChangeText = (e) => {
-    setWord(e.target.value);
-  };
+  const { mode, setMode } = useColorScheme();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -130,31 +143,14 @@ function Body() {
         `${url}${word}?key=34c69346-780e-4ac3-a06e-709641223ea1`
       );
       const respRes = await resp.json();
-
+      console.log(respRes);
       if (resp.ok && respRes.length) {
-        setError(false);
-        setSechWord(word);
-        setObjWord((objWord) => ({
-          ...objWord,
-          sound: respRes[0].hwi,
-          lexicalEntries: respRes[0],
-        }));
+        dispatch(handleError(false));
       } else {
-        setError(true);
-        setSechWord("");
+        dispatch(handleError(true));
       }
     } catch (err) {
       console.log(err);
-    }
-  };
-
-  const handleSound = () => {
-    if (objWord.sound?.prs) {
-      const prs = objWord.sound.prs[0].sound.audio;
-      const sound = `https://media.merriam-webster.com/audio/prons/en/us/mp3/${prs.charAt(
-        0
-      )}/${prs}.mp3`;
-      new Audio(sound).play();
     }
   };
 
@@ -204,13 +200,9 @@ function Body() {
             </IconButton>
           </div>
         </div>
-        <SearchForm
-          onChange={handleChangeText}
-          onSubmit={handleSubmit}
-          word={word}
-        />
-        <ErrorRes errorTrue={error} />
-        <Result word={sechWord} objWord={objWord} onClick={handleSound} />
+        <SearchForm />
+        <ErrorRes />
+        <Result />
       </div>
     </div>
   );
