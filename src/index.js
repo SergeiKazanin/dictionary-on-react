@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
+import { Provider, useSelector, useDispatch } from "react-redux";
+import { store } from "./store/store";
 import "./index.css";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -13,6 +15,8 @@ import {
 } from "@mui/material/styles";
 
 function SearchForm(props) {
+  const word = useSelector((store) => store.diction.word);
+
   return (
     <form
       className="flex justify-between items-center gap-3 w-full p-2 rounded-md border-0 dark:bg-neutral-700"
@@ -21,7 +25,7 @@ function SearchForm(props) {
       <TextField
         id="outlined-basic"
         onChange={(e) => props.onChange(e)}
-        value={props.word}
+        value={word}
         label="Word"
         variant="outlined"
         size="small"
@@ -215,6 +219,8 @@ function Body() {
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <CssVarsProvider>
-    <Body />
+    <Provider store={store}>
+      <Body />
+    </Provider>
   </CssVarsProvider>
 );
