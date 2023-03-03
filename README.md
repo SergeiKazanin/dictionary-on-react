@@ -1,6 +1,6 @@
-Dictionary using API 
+Dictionary using API, Tailwind CSS, redux toolkit, dark theme, Material UI
 
 https://sergeikazanin.github.io/dictionary-on-react/
 
-![1](https://user-images.githubusercontent.com/105712313/217463038-6af7a80b-0a7e-44b6-8f71-b7c08f53473e.png)
-![2](https://user-images.githubusercontent.com/105712313/217463048-ccd23730-7d31-4241-81a9-6d6cc911076c.png)
+![Screenshot_20230303_124317](https://user-images.githubusercontent.com/105712313/222641194-66e4f087-2426-48ff-bcf6-f87baafcd9b5.png)
+![Screenshot_20230303_124329](https://user-images.githubusercontent.com/105712313/222641237-f8ab5987-de37-4915-9ed8-4a88641565b5.png)
