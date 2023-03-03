@@ -77,8 +77,6 @@ function PrintArrObj(props) {
 function Result() {
   const { error, status, res } = useSelector((store) => store.diction);
 
-  console.log(res);
-
   if (status === "loading") {
     return <h2 className="text-4xl">Loading</h2>;
   }
@@ -87,12 +85,12 @@ function Result() {
     return <h2 className="text-4xl">{error}</h2>;
   }
 
-  if (!error  && res?.length &&  typeof res[0] === "string") {
+  if (!error && res?.length && typeof res[0] === "string") {
     return (
       <div className="p-2 border-0 dark:bg-neutral-700 rounded-md w-full flex flex-col gap-3 justify-center">
-        <PrintArr p = {"Maybe you mean"} arr ={res} />
-      </div> 
-    )
+        <PrintArr p={"Maybe you mean"} arr={res} />
+      </div>
+    );
   }
 
   if (!error && res?.length && !(typeof res[0] === "string")) {
