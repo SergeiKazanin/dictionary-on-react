@@ -75,22 +75,37 @@ function PrintArrObj(props) {
 }
 
 function Result() {
-  const error = useSelector((store) => store.diction.error);
-  const res = useSelector((state) => state.diction.res);
-  const res0 = res[0]
-  console.log(res0);
+  const { error, status, res } = useSelector((store) => store.diction);
 
-  const handleSound = () => {
-    if (res0.hwi?.prs) {
-      const prs = res0.hwi.prs[0].sound.audio;
-      const sound = `https://media.merriam-webster.com/audio/prons/en/us/mp3/${prs.charAt(
-        0
-      )}/${prs}.mp3`;
-      new Audio(sound).play();
-    }
-  };
+  console.log(res);
 
-  if (!error && res.length) {
+  if (status === "loading") {
+    return <h2 className="text-4xl">Loading</h2>;
+  }
+
+  if (error) {
+    return <h2 className="text-4xl">{error}</h2>;
+  }
+
+  if (!error  && res?.length &&  typeof res[0] === "string") {
+    return (
+      <div className="p-2 border-0 dark:bg-neutral-700 rounded-md w-full flex flex-col gap-3 justify-center">
+        <PrintArr p = {"Maybe you mean"} arr ={res} />
+      </div> 
+    )
+  }
+
+  if (!error && res?.length && !(typeof res[0] === "string")) {
+    const res0 = res[0];
+    const handleSound = () => {
+      if (res0.hwi?.prs) {
+        const prs = res0.hwi.prs[0].sound.audio;
+        const sound = `https://media.merriam-webster.com/audio/prons/en/us/mp3/${prs.charAt(
+          0
+        )}/${prs}.mp3`;
+        new Audio(sound).play();
+      }
+    };
     return (
       <div className="p-2 border-0 dark:bg-neutral-700 rounded-md w-full flex flex-col gap-3 justify-center">
         <div className="flex dark:border-white justify-between items-center gap-3 w-full rounded-md border-2 border-stone-900">
@@ -117,42 +132,8 @@ function Result() {
   }
 }
 
-function ErrorRes() {
-  const error = useSelector((store) => store.diction.error);
-  if (error) {
-    return <div className="error">Word not found</div>;
-  }
-}
-
 function Body() {
-  const url =
-    "https://www.dictionaryapi.com/api/v3/references/collegiate/json/";
-
-  const word = useSelector((store) => store.diction.word);
-  const dispatch = useDispatch();
-
   const { mode, setMode } = useColorScheme();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!word.trim()) return;
-
-    try {
-      const resp = await fetch(
-        `${url}${word}?key=34c69346-780e-4ac3-a06e-709641223ea1`
-      );
-      const respRes = await resp.json();
-      console.log(respRes);
-      if (resp.ok && respRes.length) {
-        dispatch(handleError(false));
-      } else {
-        dispatch(handleError(true));
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
 
   const handleChangeTheme = () => {
     setMode(mode === "dark" ? "light" : "dark");
@@ -201,7 +182,6 @@ function Body() {
           </div>
         </div>
         <SearchForm />
-        <ErrorRes />
         <Result />
       </div>
     </div>
