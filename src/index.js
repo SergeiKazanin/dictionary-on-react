@@ -14,7 +14,7 @@ import {
   useColorScheme,
 } from "@mui/material/styles";
 
-import { handleChangeText, handleError, getRes } from "./store/slice";
+import { handleChangeText,  getRes } from "./store/slice";
 
 function SearchForm() {
   const word = useSelector((state) => state.diction.word);
