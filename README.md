@@ -1,4 +1,4 @@
-Dictionary using API, Tailwind CSS, redux toolkit, dark theme, Material UI
+Dictionary using API, Tailwind CSS, redux toolkit, RTK Query, dark theme, Material UI
 
 https://sergeikazanin.github.io/dictionary-on-react/
 
