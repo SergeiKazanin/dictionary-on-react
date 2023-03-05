@@ -17,7 +17,7 @@ import {
 import { handleChangeText, handleError, getRes } from "./store/slice";
 
 function SearchForm() {
-  const word = useSelector((store) => store.diction.word);
+  const word = useSelector((state) => state.diction.word);
   const dispatch = useDispatch();
 
   return (
@@ -60,13 +60,15 @@ function PrintArr(props) {
 }
 
 function PrintArrObj(props) {
+  const keys = Object.keys(props.arr[0]);
+
   if (props.arr?.length) {
     return (
       <div>
         <p>{props.p}</p>
         <ul className="ml-3">
           {props.arr.map((el, i) => (
-            <li key={i}> {el.drp} </li>
+            <li key={i}> {el[keys[props.keyNum]]} </li>
           ))}
         </ul>
       </div>
@@ -75,7 +77,7 @@ function PrintArrObj(props) {
 }
 
 function Result() {
-  const { error, status, res } = useSelector((store) => store.diction);
+  const { error, status, res } = useSelector((state) => state.diction);
 
   if (status === "loading") {
     return <h2 className="text-4xl">Loading</h2>;
@@ -123,7 +125,7 @@ function Result() {
             <p>{res0.hwi?.prs !== undefined ? res0.hwi.prs[0].mw : null}</p>
           </div>
           <PrintArr p={"Definitions"} arr={res0.shortdef} />
-          <PrintArrObj p={"Phrasal verb"} arr={res0.dros} />
+          <PrintArrObj p={"Phrasal verb"} keyNum={0} arr={res0.dros} />
         </div>
       </div>
     );
