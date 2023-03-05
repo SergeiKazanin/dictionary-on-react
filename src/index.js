@@ -14,17 +14,11 @@ import {
   useColorScheme,
 } from "@mui/material/styles";
 
-import {
-  handleChangeText,
-  handleError,
-  getRes,
-  handleStatus,
-} from "./store/slice";
+import { handleChangeText } from "./store/slice";
 import { useGetWordQuery } from "./store/dictionAPI";
 
 function SearchForm() {
   const [wordSet, setWordSet] = useState("");
-  const word = useSelector((state) => state.diction.word);
   const dispatch = useDispatch();
 
   return (
@@ -32,7 +26,6 @@ function SearchForm() {
       className="flex justify-between items-center gap-3 w-full p-2 rounded-md border-0 dark:bg-neutral-700"
       onSubmit={(e) => {
         e.preventDefault();
-        //dispatch(getRes(word));
         dispatch(handleChangeText(wordSet));
       }}
     >
@@ -84,17 +77,17 @@ function PrintArrObj(props) {
 }
 
 function Result() {
-  const { error, status, word } = useSelector((state) => state.diction);
+  const { word } = useSelector((state) => state.diction);
   let res;
   const {
-    isLoading,
+    isFetching,
     data = [],
     isError,
   } = useGetWordQuery(word, { skip: word < 1 });
 
-  console.log(isLoading, "load");
+  console.log(isFetching, "load");
 
-  if (isLoading) {
+  if (isFetching) {
     return <h2 className="text-4xl">Loading</h2>;
   }
 
