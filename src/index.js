@@ -60,9 +60,8 @@ function PrintArr(props) {
 }
 
 function PrintArrObj(props) {
-  const keys = Object.keys(props.arr[0]);
-
   if (props.arr?.length) {
+    const keys = Object.keys(props.arr[0]);
     return (
       <div>
         <p>{props.p}</p>
