@@ -14,9 +14,16 @@ import {
   useColorScheme,
 } from "@mui/material/styles";
 
-import { handleChangeText,  getRes } from "./store/slice";
+import {
+  handleChangeText,
+  handleError,
+  getRes,
+  handleStatus,
+} from "./store/slice";
+import { useGetWordQuery } from "./store/dictionAPI";
 
 function SearchForm() {
+  const [wordSet, setWordSet] = useState("");
   const word = useSelector((state) => state.diction.word);
   const dispatch = useDispatch();
 
@@ -25,13 +32,14 @@ function SearchForm() {
       className="flex justify-between items-center gap-3 w-full p-2 rounded-md border-0 dark:bg-neutral-700"
       onSubmit={(e) => {
         e.preventDefault();
-        dispatch(getRes(word));
+        //dispatch(getRes(word));
+        dispatch(handleChangeText(wordSet));
       }}
     >
       <TextField
         id="outlined-basic"
-        onChange={(e) => dispatch(handleChangeText(e.target.value))}
-        value={word}
+        onChange={(e) => setWordSet(e.target.value)}
+        value={wordSet}
         label="Word"
         variant="outlined"
         size="small"
@@ -76,17 +84,27 @@ function PrintArrObj(props) {
 }
 
 function Result() {
-  const { error, status, res } = useSelector((state) => state.diction);
+  const { error, status, word } = useSelector((state) => state.diction);
+  let res;
+  const {
+    isLoading,
+    data = [],
+    isError,
+  } = useGetWordQuery(word, { skip: word < 1 });
 
-  if (status === "loading") {
+  console.log(isLoading, "load");
+
+  if (isLoading) {
     return <h2 className="text-4xl">Loading</h2>;
   }
 
-  if (error) {
-    return <h2 className="text-4xl">{error}</h2>;
+  if (isError) {
+    return <h2 className="text-4xl">Error</h2>;
+  } else {
+    res = data;
   }
 
-  if (!error && res?.length && typeof res[0] === "string") {
+  if (!isError && res?.length && typeof res[0] === "string") {
     return (
       <div className="p-2 border-0 dark:bg-neutral-700 rounded-md w-full flex flex-col gap-3 justify-center">
         <PrintArr p={"Maybe you mean"} arr={res} />
@@ -94,7 +112,7 @@ function Result() {
     );
   }
 
-  if (!error && res?.length && !(typeof res[0] === "string")) {
+  if (!isError && res?.length && !(typeof res[0] === "string")) {
     const res0 = res[0];
     const handleSound = () => {
       if (res0.hwi?.prs) {

@@ -30,14 +30,20 @@ const slice = createSlice({
     res: [],
     error: null,
     status: null,
+    wordSet: "",
   },
   reducers: {
     handleChangeText(state, action) {
       state.word = action.payload;
     },
-
     handleError(state, action) {
       state.error = action.payload;
+    },
+    handleStatus(state, action) {
+      state.status = action.payload;
+    },
+    handleWord(state, action) {
+      state.wordSet = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -60,6 +66,7 @@ const slice = createSlice({
   },
 });
 
-export const { handleChangeText, handleError } = slice.actions;
+export const { handleChangeText, handleError, handleStatus, handleWord } =
+  slice.actions;
 
 export const sliceReducer = slice.reducer;
