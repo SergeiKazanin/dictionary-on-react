@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import IconButton from "@mui/material/IconButton";
-import {SearchForm} from "./SearchForm";
-import {Result} from "./Result"
+import { SearchForm } from "./SearchForm";
+import { Result } from "./Result";
 import { useColorScheme } from "@mui/material/styles";
 
 export function Dictionary() {
