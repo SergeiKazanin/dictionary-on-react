@@ -34,7 +34,7 @@ function PrintArrObj(props) {
   }
 }
 
-export function Result() {
+export default function Result() {
   const { word } = useSelector((state) => state.diction);
   let res;
   const {
