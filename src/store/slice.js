@@ -12,6 +12,5 @@ const slice = createSlice({
   },
 });
 
-export const { handleChangeText } = slice.actions;
-
+export const actionsDiction = slice.actions;
 export const sliceReducer = slice.reducer;
