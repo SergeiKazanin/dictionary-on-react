@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import IconButton from "@mui/material/IconButton";
-import  SearchForm  from "./SearchForm";
-import  Result  from "./Result";
+import SearchForm from "./SearchForm";
+import Result from "./Result";
 import { useColorScheme } from "@mui/material/styles";
 
 export default function Dictionary() {
@@ -15,8 +15,8 @@ export default function Dictionary() {
     localStorage.setItem("theme", mode === "dark" ? "light" : "dark");
   };
 
-  function SetIconDarkMode(props) {
-    if (props.mode === "light") {
+  function SetIconDarkMode({ mode }: { mode: string | undefined }) {
+    if (mode === "light") {
       return <LightModeIcon sx={{ fontSize: 30 }} />;
     } else {
       return <DarkModeIcon sx={{ fontSize: 30 }} />;

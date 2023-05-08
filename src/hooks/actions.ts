@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { bindActionCreators } from "@reduxjs/toolkit";
-import { actionsDiction } from "../store/slice.js";
+import { actionsDiction } from "../store/slice";
 
 const actions = {
   ...actionsDiction,

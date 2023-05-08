@@ -3,9 +3,11 @@ import { Provider } from "react-redux";
 import { store } from "./store/store";
 import "./index.css";
 import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
-import  Dictionary  from "./components/Dictionary";
+import Dictionary from "./components/Dictionary";
 
-const root = ReactDOM.createRoot(document.getElementById("root"));
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
 root.render(
   <CssVarsProvider>
     <Provider store={store}>
